@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from .models import Telefono
 from .models import SamsungPhone
 from .models import XiaomiPhone
@@ -30,4 +32,22 @@ class OppoPhoneSerializer(serializers.ModelSerializer):
 class IphonePhoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = IphonePhone
-        fields =  ('id', 'marca', 'precio', 'unidades_disponibles', 'imagen_perfil')              
+        fields =  ('id', 'marca', 'precio', 'unidades_disponibles', 'imagen_perfil')         
+        
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user is None:
+                raise serializers.ValidationError("Credenciales incorrectas.")
+        else:
+            raise serializers.ValidationError("Debe incluirse 'username' y 'password'.")
+        
+        data['user'] = user
+        return data     

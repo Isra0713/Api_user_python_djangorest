@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from api import views  # Importa el módulo views completo
-from api.views import SamsungPhoneViewSet, XiaomiPhoneViewSet, OppoPhoneViewSet, IphonePhoneViewSet  # Importa las vistas
+from api.views import SamsungPhoneViewSet, XiaomiPhoneViewSet, OppoPhoneViewSet, IphonePhoneViewSet, LoginView  # Importa las vistas
 
 # Crea el router para registrar las rutas
 router = routers.DefaultRouter()
@@ -14,4 +14,5 @@ router.register(r'iphone', IphonePhoneViewSet)  # Registro para los iphone
 # Define las URLs y conecta el router
 urlpatterns = [
     path('', include(router.urls)),  # Incluye las rutas del router
+     path('login/', LoginView.as_view(), name='login'),  # Añade la ruta para el login
 ]
